@@ -21,7 +21,9 @@ public class ClientService {
 
     @Transactional(readOnly = true)
     public ClientDTO findById(Long id) {
-        Client client = clientRepository.findById(id).get();
+        Client client = clientRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Recurso não encontrado")
+        );
         return new ClientDTO(client);
     }
 
@@ -50,6 +52,11 @@ public class ClientService {
         return new ClientDTO(entity);
     }
 
+    @DeleteMapping(value = "/{id}")
+    public void delete(Long id) {
+        clientRepository.deleteById(id);
+    }
+
     private void entityToDTO(Client entity, ClientDTO dto) {
         entity.setId(dto.getId());
         entity.setName(dto.getName());
@@ -59,8 +66,5 @@ public class ClientService {
         entity.setChildren(dto.getChildren());
     }
 
-    @DeleteMapping(value = "/{id}")
-    public void delete(Long id) {
-        clientRepository.deleteById(id);
-    }
+
 }

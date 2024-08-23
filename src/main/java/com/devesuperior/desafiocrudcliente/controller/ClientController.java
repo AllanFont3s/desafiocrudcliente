@@ -30,21 +30,23 @@ public class ClientController {
         Page<ClientDTO> dto = clientService.findAll(pageable);
         return ResponseEntity.ok(dto);
     }
+
     @PostMapping
-    public ResponseEntity<ClientDTO> insert(@RequestBody ClientDTO dto){
+    public ResponseEntity<ClientDTO> insert(@RequestBody ClientDTO dto) {
         dto = clientService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
-    public ResponseEntity<ClientDTO>update(@RequestBody ClientDTO dto, @PathVariable Long id){
-        dto = clientService.update(dto,id);
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ClientDTO> update(@RequestBody ClientDTO dto, @PathVariable Long id) {
+        dto = clientService.update(dto, id);
         return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable  Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         clientService.delete(id);
         return ResponseEntity.noContent().build();
     }
